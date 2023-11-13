@@ -1,0 +1,303 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link rel="stylesheet" href="css/style.css">
+    <title>Калькулятор доходности</title>
+</head>
+<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+
+<body>
+    <div class="calculator">
+        <div class="calculator-top-bar">
+            <p>Розрахувати окупність обладнання </p>
+            <button class="calculator-top-bar__close">
+
+                <svg width="35" height="35" viewBox="0 0 35 35" fill="none" xmlns="http://www.w3.org/2000/svg">
+                    <path
+                        d="M17.5 35C7.85011 35 0 27.1499 0 17.5C0 7.85011 7.85011 0 17.5 0C27.1499 0 35 7.85011 35 17.5C35 27.1499 27.1499 35 17.5 35ZM17.5 2.1875C9.05628 2.1875 2.1875 9.05628 2.1875 17.5C2.1875 25.9437 9.05628 32.8125 17.5 32.8125C25.9437 32.8125 32.8125 25.9437 32.8125 17.5C32.8125 9.05628 25.9437 2.1875 17.5 2.1875Z"
+                        fill="#CCCCCC"></path>
+                    <path
+                        d="M12.0857 24.0068C11.8056 24.0068 11.5254 23.9005 11.3126 23.6861C10.8854 23.2589 10.8854 22.5662 11.3126 22.139L22.1406 11.3107C22.5682 10.8834 23.2608 10.8834 23.6881 11.3107C24.1153 11.7379 24.1153 12.4306 23.6881 12.8581L12.8598 23.6861C12.644 23.9005 12.3642 24.0068 12.0857 24.0068Z"
+                        fill="#CCCCCC"></path>
+                    <path
+                        d="M22.9136 24.0074C22.6338 24.0074 22.3537 23.9011 22.1408 23.6867L11.3128 12.86C10.8853 12.4327 10.8853 11.7401 11.3128 11.3128C11.7401 10.8853 12.4327 10.8853 12.86 11.3128L23.688 22.1408C24.1155 22.5681 24.1155 23.2608 23.688 23.688C23.4738 23.9011 23.1937 24.0074 22.9136 24.0074Z"
+                        fill="#CCCCCC"></path>
+                </svg>
+            </button>
+        </div>
+        <div class="calculator-data">
+            [
+            {
+            "name": "Asclepion MeDioStar Monolith",
+            "img": "calculator-product1.jpg",
+            "pocedureMin": 1,
+            "pocedureMax": 7,
+            "priceMin": 400,
+            "priceMax": 2000,
+            "suppliesPrice": 127
+            },
+            {
+            "name": "Asclepion Dermablate",
+            "img": "calculator-product2.png",
+            "pocedureMin": 1,
+            "pocedureMax": 3,
+            "priceMin": 2990,
+            "priceMax": 7990,
+            "suppliesPrice": 115
+            },
+            {
+            "name": "Asclepion The Epilab",
+            "img": "calculator-product3.jpg",
+            "pocedureMin": 1,
+            "pocedureMax": 7,
+            "priceMin": 400,
+            "priceMax": 2000,
+            "suppliesPrice": 127
+            },
+            {
+            "name": "Asclepion QuadrostarPRO",
+            "img": "calculator-product4.jpg",
+            "pocedureMin": 1,
+            "pocedureMax": 4,
+            "priceMin": 1650,
+            "priceMax": 2950,
+            "suppliesPrice": 50
+            },
+            {
+            "name": "Wontech Tightan",
+            "img": "calculator-product5.jpg",
+            "pocedureMin": 1,
+            "pocedureMax": 7,
+            "priceMin": 6000,
+            "priceMax": 48000,
+            "suppliesPrice": 3575
+            },
+            {
+            "name": "Starvac DX Smart",
+            "img": "calculator-product6.jpg",
+            "pocedureMin": 1,
+            "pocedureMax": 8,
+            "priceMin": 300,
+            "priceMax": 800,
+            "suppliesPrice": 25
+            },
+            {
+            "name": "Starvac DX Twin",
+            "img": "calculator-product7.jpg",
+            "pocedureMin": 1,
+            "pocedureMax": 7,
+            "priceMin": 450,
+            "priceMax": 1000,
+            "suppliesPrice": 37.7
+            }
+            ]
+        </div>
+        <div class="calculator-top">
+
+            <div class="calculator-top-left">
+                <select name="calculator-top-select" id="calculator-top-select">
+
+                </select>
+                <div class="calculator-top-left__img"></div>
+            </div>
+            <div class="calculator-top-right">
+                <div class="calculator-top__item">
+                    <div class="calculator-top__item-top">
+                        <p>Кількість робочих днів </p>
+                        <span id="calculatorWorkDays">1</span>
+                    </div>
+                    <input type="range" value="1" step="1" max="30" min="1" id="calculatorInputWorkDays">
+                    <div class="calculator-top__item-bottom">
+                        <p>min 1</p>
+                        <p>max 30</p>
+                    </div>
+                </div>
+                <div class="calculator-top__item">
+                    <div class="calculator-top__item-top">
+                        <p>Кількість процедур на день </p>
+                        <span id="calculatorProcedurePerDay">1</span>
+                    </div>
+                    <input type="range" value="1" step="1" max="7" min="1" id="calculatorInputProcedurePerDay">
+                    <div class="calculator-top__item-bottom">
+                        <p>min 1</p>
+                        <p>max <span id="calculatorProcedurePerDayMax"></span></p>
+                    </div>
+                </div>
+                <div class="calculator-top__item">
+                    <div class="calculator-top__item-top">
+                        <p>Вартість процедури
+                        </p>
+                        <span id="calculatorProcedurePrice">400</span>
+                    </div>
+                    <input type="range" value="400" step="50" max="2000" min="400" id="calculatorInputProcedurePrice">
+                    <div class="calculator-top__item-bottom">
+                        <p>min <span id="calculatorProcedurePriceMin"></span></p>
+                        <p>max <span id="calculatorProcedurePriceMax"></span></p>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="calculator-statistics">
+            <div class="calculator-statistics-item">
+                <p class="calculator-statistics-item__title">
+                    Витрати на процедуру
+                </p>
+
+                <table class="calculator-statistics-item__body">
+                    <!-- <div class="calculator-statistics-item__block">
+                        <div class="calculator-statistics-item__block-container">
+                            <p>Бонус співробітникам </p>
+                            <span> <span id="calculatorEmployeeBonus"></span> грн (25%)</span>
+                        </div>
+
+                    </div>
+                    <div class="calculator-statistics-item__block">
+                        <div class="calculator-statistics-item__block-container">
+                            <p>Витратні матеріали </p>
+                            <span> <span id="calculatorSupplies"></span> грн</span>
+                        </div>
+
+                    </div> -->
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong>Бонус співробітникам</strong>
+                            </td>
+                            <td><span> <span id="calculatorEmployeeBonus"></span> грн (25%)</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>Витратні матеріали</strong>
+                            </td>
+                            <td><span> <span id="calculatorSupplies"></span> грн</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <canvas id="payback-chart" data-labels='["0","1 рік","2 роки","3 роки","4 роки","5 років"]'
+            data-values='[0, 2000000, 6000000, 8000000, 10000000, 12000000]'></canvas>
+    </div>
+
+</body>
+<script src="https://code.jquery.com/jquery-3.7.1.min.js"
+    integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
+<script src="js/calculator.js"></script>
+<script>
+    let currentChartData = [0, 100, 100 * 2, 100 * 3, 100 * 4, 100 * 5];
+    var ctx = document.getElementById("payback-chart").getContext("2d");
+    var gradient = ctx.createLinearGradient(1000, 0, 0, 0);
+    gradient.addColorStop(0, 'rgba(0, 113, 223, 0.6)');
+    gradient.addColorStop(1, 'rgba(0, 113, 223, 0)');
+    const chartLabels = $('#payback-chart').data('labels');
+    const chartValues = $('#payback-chart').data('values');
+    const chartData = {
+        labels: chartLabels,
+        datasets: [{
+            backgroundColor: gradient,
+            fill: true,
+            borderColor: 'rgb(0, 113, 223)',
+            datalabels: {
+                color: '#545459',
+                anchor: function (context) {
+                    let anc = 'left';
+                    switch (context.dataIndex) {
+                        case 1:
+                            anc = 'start';
+                            break;
+                        case 2:
+                            anc = 'start';
+                            break;
+                        case 3:
+                            anc = 'start';
+                            break;
+                        case 4:
+                            anc = 'end';
+                            break;
+                        case 5:
+                            anc = 'end';
+                            break;
+                        default:
+                            anc = 'end';
+                            break;
+                    }
+                    return anc;
+                },
+                align: function (context) {
+                    let pos = 'left';
+                    switch (context.dataIndex) {
+                        case 1:
+                            pos = 'right';
+                            break;
+                        case 2:
+                            pos = 'right';
+                            break;
+                        case 3:
+                            pos = 'right';
+                            break;
+                        case 4:
+                            pos = 'left';
+                            break;
+                        case 5:
+                            pos = 'left';
+                            break;
+                        default:
+                            pos = 'left';
+                            break;
+                    }
+                    return pos;
+                },
+                offset: 8,
+                display: function (context) {
+                    return context.dataIndex != 0;
+                },
+                font: function (context) {
+                    var width = context.chart.width;
+                    var size = Math.round(width / 32);
+                    return {
+                        size: (size <= 14) ? size : 14
+                    };
+                }
+            },
+            data: currentChartData,
+        }]
+    };
+    const chartConfig = {
+        type: 'line',
+        data: chartData,
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    grace: '6%',
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: false
+                }
+            }
+        },
+        plugins: [0, 2000000, 6000000, 8000000, 10000000, 12000000]
+    };
+    const paybackChart = new Chart(
+        ctx,
+        chartConfig
+    );
+</script>
+
+</html>
