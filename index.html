@@ -186,430 +186,129 @@
 <script src="https://code.jquery.com/jquery-3.7.1.min.js"
     integrity="sha256-/JqT3SQfawRcv/BIHPThkBvs0OEvtFFmqPF/lYI/Cxo=" crossorigin="anonymous"></script>
 <script src="js/calculator.js"></script>
-<script type="text/javascript" data-pagespeed-no-defer>pagespeed.lazyLoadImages.overrideAttributeFunctions();</script>
+
 <script>
     let currentChartData = [0, 0, 0, 0, 0, 0];
-    $('[data-modal]').click(function (event) {
-        event.preventDefault();
-        const modalBtn = $(this);
-        const modal = $('.js-modal');
-        const modalContent = modal.find('.modal__body');
-        const modalId = modalBtn.attr('data-modal');
-        const modalHTML = $("#" + modalId).clone();
-        modalContent.html(modalHTML);
-        const modalBackdrop = $('.js-modal-backdrop');
-        modalBackdrop.fadeIn();
-        modal.fadeIn();
-        modal.scrollTop(0); // inner content posision top on each new opened modal
-        $('input[type="tel"]').inputmask("+38 (999) 999-99-99");
-        if (modalBtn.attr('data-modal-title')) {
-            modal.find('.modal__title').text(modalBtn.attr('data-modal-title'))
-        }
-        if (modalBtn.attr('data-video-url') && modalBtn.attr('data-modal-player')) {
-            modal.find('video').removeClass('d-none');
-            modal.find('iframe').addClass('d-none');
-            modal.find('video').attr('src', modalBtn.attr('data-video-url'));
-        }
-        if (modalBtn.attr('data-video-url') && !modalBtn.attr('data-modal-player')) {
-            modal.find('video').addClass('d-none');
-            modal.find('iframe').removeClass('d-none');
-            modal.find('iframe').attr('src', modalBtn.attr('data-video-url'));
-        }
-        if (modalBtn.attr('data-modal-message')) {
-            modal.find('.modal__message').text(modalBtn.attr('data-modal-message'))
-        }
-        if (modalBtn.attr('data-modal-submessage')) {
-            modal.find('.modal__submessage').text(modalBtn.attr('data-modal-submessage'))
-        }
-        if (modalBtn.attr('data-payback-equipment')) {
-            let calcData = [
-                {
-                    id: 'paybacks1',
-                    minProcedures: 1,
-                    maxProcedures: 7,
-                    minCost: 400,
-                    maxCost: 2000,
-                    productImg: 'images/оборудование/Asclepion/Monolith/ASCLEPION_MEDIOSTAR_MONOLITH.jpg',
-                    consumables: 127,
-                    employee_bonus: 0.25
-                }
-                , {
-                    id: 'paybacks2',
-                    minProcedures: 1,
-                    maxProcedures: 3,
-                    minCost: 2990,
-                    maxCost: 7990,
-                    productImg: 'images/оборудование/Asclepion/Dermablate/Dermablate_Display2.png',
-                    consumables: 115,
-                    employee_bonus: 0.300
-                }
-                , {
-                    id: 'paybacks3',
-                    minProcedures: 1,
-                    maxProcedures: 7,
-                    minCost: 400,
-                    maxCost: 2000,
-                    productImg: 'images/оборудование/Asclepion/The-Epilab-2023/asclepion-epilab-2023-1.jpg',
-                    consumables: 127,
-                    employee_bonus: 0.25
-                }
-                , {
-                    id: 'paybacks4',
-                    minProcedures: 1,
-                    maxProcedures: 4,
-                    minCost: 1650,
-                    maxCost: 2950,
-                    productImg: 'images/оборудование/Asclepion/QuadrostarPro/QSPRO_case.jpg',
-                    consumables: 50,
-                    employee_bonus: 0.30
-                }
-                , {
-                    id: 'paybacks5',
-                    minProcedures: 1,
-                    maxProcedures: 7,
-                    minCost: 6000,
-                    maxCost: 48000,
-                    productImg: 'images/оборудование/WONTECH/ULTRASKIN TIGHTAN/ultraskin-tightan-cover.jpg',
-                    consumables: 3575,
-                    employee_bonus: 0.30
-                }
-                , {
-                    id: 'paybacks6',
-                    minProcedures: 1,
-                    maxProcedures: 8,
-                    minCost: 300,
-                    maxCost: 800,
-                    productImg: 'images/оборудование/STARVAC/DXSMART/starvac-dxsmart-prev-1.jpg',
-                    consumables: 25,
-                    employee_bonus: 0.250
-                }
-                , {
-                    id: 'paybacks7',
-                    minProcedures: 1,
-                    maxProcedures: 7,
-                    minCost: 450,
-                    maxCost: 1000,
-                    productImg: 'images/оборудование/dx twin prev.jpg',
-                    consumables: 37.7,
-                    employee_bonus: 0.25
-                }
-            ];
-            let currentValues = {
-                days: 1,
-                procedures: calcData[0].minProcedures,
-                cost: calcData[0].minCost,
-                consumables: calcData[0].consumables,
-                employee_bonus: calcData[0].employee_bonus
-            }
-            console.log('currentChartData', currentChartData)
-            // chart
-            var ctx = document.getElementById("payback-chart").getContext("2d");
-            var gradient = ctx.createLinearGradient(1000, 0, 0, 0);
-            gradient.addColorStop(0, 'rgba(0, 113, 223, 0.6)');
-            gradient.addColorStop(1, 'rgba(0, 113, 223, 0)');
-            const chartLabels = $('#payback-chart').data('labels');
-            const chartValues = $('#payback-chart').data('values');
-            const chartData = {
-                labels: chartLabels,
-                datasets: [{
-                    backgroundColor: gradient,
-                    fill: true,
-                    borderColor: 'rgb(0, 113, 223)',
-                    datalabels: {
-                        color: '#545459',
-                        anchor: function (context) {
-                            let anc = 'left';
-                            switch (context.dataIndex) {
-                                case 1:
-                                    anc = 'start';
-                                    break;
-                                case 2:
-                                    anc = 'start';
-                                    break;
-                                case 3:
-                                    anc = 'start';
-                                    break;
-                                case 4:
-                                    anc = 'end';
-                                    break;
-                                case 5:
-                                    anc = 'end';
-                                    break;
-                                default:
-                                    anc = 'end';
-                                    break;
-                            }
-                            return anc;
-                        },
-                        align: function (context) {
-                            let pos = 'left';
-                            switch (context.dataIndex) {
-                                case 1:
-                                    pos = 'right';
-                                    break;
-                                case 2:
-                                    pos = 'right';
-                                    break;
-                                case 3:
-                                    pos = 'right';
-                                    break;
-                                case 4:
-                                    pos = 'left';
-                                    break;
-                                case 5:
-                                    pos = 'left';
-                                    break;
-                                default:
-                                    pos = 'left';
-                                    break;
-                            }
-                            return pos;
-                        },
-                        offset: 8,
-                        display: function (context) {
-                            return context.dataIndex != 0;
-                        },
-                        font: function (context) {
-                            var width = context.chart.width;
-                            var size = Math.round(width / 32);
-                            return {
-                                size: (size <= 14) ? size : 14
-                            };
-                        }
-                    },
-                    data: currentChartData,
-                }]
-            };
-            const chartConfig = {
-                type: 'line',
-                data: chartData,
-                options: {
-                    maintainAspectRatio: false,
-                    scales: {
-                        x: {
-                            grace: '6%',
-                            grid: {
-                                display: false
-                            }
-                        },
-                        y: {
-                            grid: {
-                                display: false
-                            }
-                        }
-                    },
-                    plugins: {
-                        legend: {
-                            display: false
-                        },
-                        tooltip: {
-                            enabled: false
-                        }
+
+    var ctx = document.getElementById("payback-chart").getContext("2d");
+    var gradient = ctx.createLinearGradient(1000, 0, 0, 0);
+    gradient.addColorStop(0, 'rgba(0, 113, 223, 0.6)');
+    gradient.addColorStop(1, 'rgba(0, 113, 223, 0)');
+    const chartLabels = $('#payback-chart').data('labels');
+    const chartValues = $('#payback-chart').data('values');
+    const chartData = {
+        labels: chartLabels,
+        datasets: [{
+            backgroundColor: gradient,
+            fill: true,
+            borderColor: 'rgb(0, 113, 223)',
+            datalabels: {
+                color: '#545459',
+                anchor: function (context) {
+                    let anc = 'left';
+                    switch (context.dataIndex) {
+                        case 1:
+                            anc = 'start';
+                            break;
+                        case 2:
+                            anc = 'start';
+                            break;
+                        case 3:
+                            anc = 'start';
+                            break;
+                        case 4:
+                            anc = 'end';
+                            break;
+                        case 5:
+                            anc = 'end';
+                            break;
+                        default:
+                            anc = 'end';
+                            break;
                     }
+                    return anc;
                 },
-                plugins: [ChartDataLabels]
-            };
-            const paybackChart = new Chart(
-                ctx,
-                chartConfig
-            );
-            calculateData();
-            setEqData(calcData[0]);
-            let daysSlider = document.getElementById('w-days');
-            let daysSliderCounter = document.getElementById('w-days-counter');
-            let daysMinValue = daysSlider.getAttribute('data-min');
-            let daysMaxValue = daysSlider.getAttribute('data-max');
-            document.getElementById('days-min').innerHTML = daysMinValue;
-            document.getElementById('days-max').innerHTML = daysMaxValue;
-            noUiSlider.create(daysSlider, {
-                start: [1],
-                step: 1,
-                range: {
-                    min: [+daysMinValue],
-                    max: [+daysMaxValue],
-                },
-            });
-            daysSlider.noUiSlider.on('update', function (values, handle) {
-                daysSliderCounter.innerHTML = +values[0];
-                currentValues.days = +values[0];
-                calculateData();
-            })
-            let proceduresSlider = document.getElementById('w-procedures');
-            let proceduresSliderCounter = document.getElementById('w-procedures-counter');
-            let proceduresMinValue = proceduresSlider.getAttribute('data-min');
-            let proceduresMaxValue = proceduresSlider.getAttribute('data-max');
-            document.getElementById('procedures-min').innerHTML = proceduresMinValue;
-            document.getElementById('procedures-max').innerHTML = proceduresMaxValue;
-            document.getElementById('employee-bonus-number').innerHTML = currentValues.employee_bonus * 100;
-            noUiSlider.create(proceduresSlider, {
-                start: [1],
-                step: 1,
-                range: {
-                    min: [+proceduresMinValue],
-                    max: [+proceduresMaxValue],
-                },
-            });
-            proceduresSlider.noUiSlider.on('update', function (values, handle) {
-                proceduresSliderCounter.innerHTML = +values[0];
-                currentValues.procedures = +values[0];
-                calculateData();
-            })
-            let costSlider = document.getElementById('w-cost');
-            let costSliderCounter = document.getElementById('w-cost-counter');
-            let costMinValue = costSlider.getAttribute('data-min');
-            let costMaxValue = costSlider.getAttribute('data-max');
-            let costStep = costSlider.getAttribute('data-step');
-            document.getElementById('cost-min').innerHTML = costMinValue;
-            document.getElementById('cost-max').innerHTML = costMaxValue;
-            noUiSlider.create(costSlider, {
-                start: [1],
-                step: +costStep,
-                range: {
-                    min: [+costMinValue],
-                    max: [+costMaxValue],
-                },
-            });
-            costSlider.noUiSlider.on('update', function (values, handle) {
-                costSliderCounter.innerHTML = +values[0];
-                currentValues.cost = +values[0];
-                calculateData();
-            })
-            $("#eq-select").change(function (e) {
-                const selectedId = e.target.value;
-                calcData.forEach(item => {
-                    if (item.id == selectedId) {
-                        currentValues.consumables = item.consumables;
-                        calculateData();
-                        setEqData(item);
-                        updateSlidersValues(item);
+                align: function (context) {
+                    let pos = 'left';
+                    switch (context.dataIndex) {
+                        case 1:
+                            pos = 'right';
+                            break;
+                        case 2:
+                            pos = 'right';
+                            break;
+                        case 3:
+                            pos = 'right';
+                            break;
+                        case 4:
+                            pos = 'left';
+                            break;
+                        case 5:
+                            pos = 'left';
+                            break;
+                        default:
+                            pos = 'left';
+                            break;
                     }
-                })
-            });
-            function setEqData(data) {
-                $('#eq-img').attr('src', data.productImg);
-                $('#w-procedures').attr('data-min', data.minProcedures);
-                $('#w-procedures').attr('data-max', data.maxProcedures);
-                $('#procedures-min').html(data.minProcedures);
-                $('#procedures-max').html(data.maxProcedures);
-                $('#w-cost').attr('data-min', data.minCost);
-                $('#w-cost').attr('data-max', data.maxCost);
-                $('#cost-min').html(data.minCost);
-                $('#cost-max').html(data.maxCost);
-                $('#consumables').html(data.consumables);
-            }
-            function updateSlidersValues(data) {
-                console.log(data);
-                proceduresSlider.noUiSlider.set([data.minProcedures, data.maxProcedures]);
-                costSlider.noUiSlider.updateOptions({
-                    start: [1],
-                    range: {
-                        min: data.minCost,
-                        max: data.maxCost
-                    }
-                }, false);
-            }
-            function calculateData() {
-                console.log(currentValues);
-                let result = currentValues.days * currentValues.procedures * currentValues.cost;
-                let employeeBonus = result * currentValues.employee_bonus;
-                currentValues.all_consumables = currentValues.consumables * currentValues.procedures * currentValues.days;
-                let result_day = currentValues.procedures * currentValues.cost;
-                let profitInDay = result_day - result_day * currentValues.employee_bonus - currentValues.consumables * currentValues.procedures;
-                let profitInMonth = profitInDay * currentValues.days;
-                let profitInYear = profitInDay * currentValues.days * 12;
-                $('#employee-bonus').html(employeeBonus);
-                $('#profit-in-day').html(profitInDay);
-                $('#profit-in-month').html(profitInMonth);
-                $('#profit-in-year').html(profitInYear);
-                $('#consumables').html(currentValues.all_consumables);
-                let yearsProfit = [0, profitInYear, profitInYear * 2, profitInYear * 3, profitInYear * 4, profitInYear * 5];
-                currentChartData = yearsProfit;
-                $('#profit-first-year').html(yearsProfit[1]);
-                $('#profit-second-year').html(yearsProfit[2]);
-                $('#profit-third-year').html(yearsProfit[3]);
-                $('#profit-fourth-year').html(yearsProfit[4]);
-                $('#profit-fifth-year').html(yearsProfit[5]);
-                paybackChart.data.datasets[0].data = yearsProfit;
-                paybackChart.update()
-            }
-        }
-    })
-</script>
-<script>
-        (function (d, w, s) {
-            var widgetHash = 'wQVgkJI6Q07ZyjktLZZw', bch = d.createElement(s); bch.type = 'text/javascript'; bch.async = true;
-            bch.src = '//widgets.binotel.com/chat/widgets/' + widgetHash + '.js';
-            var sn = d.getElementsByTagName(s)[0]; sn.parentNode.insertBefore(bch, sn);
-        })(document, window, 'script');
-    (function (d, w, s) {
-        var widgetHash = '2d08i8t925v6cjxidxul', gcw = d.createElement(s); gcw.type = 'text/javascript'; gcw.async = true;
-        gcw.src = '//widgets.binotel.com/getcall/widgets/' + widgetHash + '.js';
-        var sn = d.getElementsByTagName(s)[0]; sn.parentNode.insertBefore(gcw, sn);
-    })(document, window, 'script');
-</script>
-<script type="application/ld+json">
-{
-"@context": "https://schema.org",
-"@type": "Store",
-"image": [
-"https://alfaspa.ua/images/ALFA-general/alfa-logo-kvadrat.jpg"
-],
-"name": "ALFA Medical & SPA Development",
-"address": {
-"@type": "PostalAddress",
-"streetAddress": "вул. Січових Стрільців, 26-Б",
-"addressLocality": "Київ",
-"addressRegion": "Kyiv",
-"postalCode": "02000",
-"addressCountry": "UA"
-},
-"geo": {
-"@type": "GeoCoordinates",
-"latitude": 50.456772,
-"longitude": 30.498875
-},
-"url": "https://alfaspa.ua",
-"telephone": "0800750153"
-}
-</script>
-<script src="/assets/components/minishop2/js/web/default.js?v=e2bdf7f5a6"></script>
-<script src="/assets/components/minishop2/js/web/lib/jquery.jgrowl.min.js"></script>
-<script src="/assets/components/minishop2/js/web/message_settings.js"></script>
-<script src="/assets/components/ajaxform/js/default.js"></script>
-<script
-    type="text/javascript">AjaxForm.initialize({ "assetsUrl": "\/assets\/components\/ajaxform\/", "actionUrl": "\/assets\/components\/ajaxform\/action.php", "closeMessage": "close all", "formSelector": "form.ajax_form", "pageId": 302 });</script>
-<script src="/assets/components/msearch2/js/web/default.js"></script>
-<script type="text/javascript">
-    if ($("form.msearch2").length) {
-        mSearch2.Form.initialize("form.msearch2");
-    }
-</script>
-<script>
-    setTimeout(function () {
-        var head = document.getElementsByTagName("head")[0];
-        var script = document.createElement("script");
-        script.type = "text/javascript";
-        script.src = "https://www.google.com/recaptcha/api.js?render=6LfVTssgAAAAAPyr_P-UL9RcFORj5YSPPqr9b39R";
-        head.appendChild(script);
-        setTimeout(function () {
-            grecaptcha.ready(function () {
-                grecaptcha.reset = grecaptchaExecute;
-                grecaptcha.reset();
-            });
-        }, 500);
-    }, 4000)
-    function grecaptchaExecute() {
-        grecaptcha.execute("6LfVTssgAAAAAPyr_P-UL9RcFORj5YSPPqr9b39R", { action: "subscription_1" }).then(function (token) {
-            var fieldsToken = document.querySelectorAll("[name ='g-recaptcha-response']");
-            Array.prototype.forEach.call(fieldsToken, function (el, i) {
-                el.value = token;
-            });
-        });
+                    return pos;
+                },
+                offset: 8,
+                display: function (context) {
+                    return context.dataIndex != 0;
+                },
+                font: function (context) {
+                    var width = context.chart.width;
+                    var size = Math.round(width / 32);
+                    return {
+                        size: (size <= 14) ? size : 14
+                    };
+                }
+            },
+            data: [0, 1, 2, 3, 4, 5],
+        }]
     };
-    // обновляем капчу каждую минуту
-    setInterval(function () {
-        grecaptcha.reset();
-    }, 60000);
+    const chartConfig = {
+        type: 'line',
+        data: chartData,
+        options: {
+            maintainAspectRatio: false,
+            scales: {
+                x: {
+                    grace: '6%',
+                    grid: {
+                        display: false
+                    }
+                },
+                y: {
+                    grid: {
+                        display: false
+                    }
+                }
+            },
+            plugins: {
+                legend: {
+                    display: false
+                },
+                tooltip: {
+                    enabled: false
+                }
+            }
+        },
+        plugins: [ChartDataLabels]
+    };
+    const paybackChart = new Chart(
+        ctx,
+        chartConfig
+    );
+
+
+
+
+
+
+
 </script>
+
+
 
 </html>
