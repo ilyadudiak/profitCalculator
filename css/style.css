@@ -104,8 +104,8 @@
 }
 
 .calculator-top-left__img {
-    background: url(../img/calculator-product1.jpg);
-    background-size: 100%;
+    background: url(../img/agnes.png);
+    background-size: contain;
     background-repeat: no-repeat;
     background-position: center;
     height: 329px;
@@ -301,4 +301,27 @@
     letter-spacing: -0.02em;
     max-width: 200px;
     display: block;
+}
+
+
+
+.payback-chart-container {
+    height: 470px;
+    width: 100%;
+    max-width: 844px;
+    padding: 50px 30px;
+    margin: 0 auto;
+    margin-top: 100px;
+}
+
+@media (max-width: 960px) {
+    .calculator {
+        padding: 45px 20px;
+    }
+}
+
+@media (max-width: 840px) {
+    .calculator-top {
+        flex-direction: column;
+    }
 }

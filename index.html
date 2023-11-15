@@ -7,7 +7,8 @@
     <link rel="stylesheet" href="css/style.css">
     <title>Калькулятор доходности</title>
 </head>
-<script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@3.0.0/dist/chart.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chartjs-plugin-datalabels@2.0.0"></script>
 
 <body>
     <div class="calculator">
@@ -32,7 +33,7 @@
             [
             {
             "name": "Asclepion MeDioStar Monolith",
-            "img": "calculator-product1.jpg",
+            "img": "agnes.png",
             "pocedureMin": 1,
             "pocedureMax": 7,
             "priceMin": 400,
@@ -41,7 +42,7 @@
             },
             {
             "name": "Asclepion Dermablate",
-            "img": "calculator-product2.png",
+            "img": "double-tite.png",
             "pocedureMin": 1,
             "pocedureMax": 3,
             "priceMin": 2990,
@@ -50,7 +51,7 @@
             },
             {
             "name": "Asclepion The Epilab",
-            "img": "calculator-product3.jpg",
+            "img": "ulthera.png",
             "pocedureMin": 1,
             "pocedureMax": 7,
             "priceMin": 400,
@@ -178,8 +179,97 @@
                 </table>
             </div>
         </div>
-        <canvas id="payback-chart" data-labels='["0","1 рік","2 роки","3 роки","4 роки","5 років"]'
-            data-values='[0, 2000000, 6000000, 8000000, 10000000, 12000000]'></canvas>
+        <div class="calculator-statistics">
+            <div class="calculator-statistics-item">
+                <p class="calculator-statistics-item__title">
+                    Ваш чистий прибуток
+                </p>
+
+                <table class="calculator-statistics-item__body">
+                    <!-- <div class="calculator-statistics-item__block">
+                        <div class="calculator-statistics-item__block-container">
+                            <p>Бонус співробітникам </p>
+                            <span> <span id="calculatorEmployeeBonus"></span> грн (25%)</span>
+                        </div>
+
+                    </div>
+                    <div class="calculator-statistics-item__block">
+                        <div class="calculator-statistics-item__block-container">
+                            <p>Витратні матеріали </p>
+                            <span> <span id="calculatorSupplies"></span> грн</span>
+                        </div>
+
+                    </div> -->
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong> За день</strong>
+                            </td>
+                            <td><span> <span id="calculatorIncomeDay"></span> грн</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>У місяць </strong>
+                            </td>
+                            <td><span> <span id="calculatorIncomeMonth"></span> грн</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>На рік </strong>
+                            </td>
+                            <td><span> <span id="calculatorIncomeYear"></span> грн</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+        <div class="payback-chart-container">
+            <canvas id="payback-chart" data-labels='["0","1 рік","2 роки","3 роки","4 роки","5 років"]'
+                data-values='[0, 2000000, 6000000, 8000000, 10000000, 12000000]'></canvas>
+        </div>
+        <div class="calculator-statistics">
+            <div class="calculator-statistics-item">
+                <p class="calculator-statistics-item__title">
+                    Прибуток у динаміці
+                </p>
+
+                <table class="calculator-statistics-item__body">
+
+                    <tbody>
+                        <tr>
+                            <td>
+                                <strong> 1 рік</strong>
+                            </td>
+                            <td><span> <span id="calculatorIncomeYear1"></span> грн</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>2 роки </strong>
+                            </td>
+                            <td><span> <span id="calculatorIncomeYear2"></span> грн</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>3 роки </strong>
+                            </td>
+                            <td><span> <span id="calculatorIncomeYear3"></span> грн</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>4 роки </strong>
+                            </td>
+                            <td><span> <span id="calculatorIncomeYear4"></span> грн</span></td>
+                        </tr>
+                        <tr>
+                            <td>
+                                <strong>5 років </strong>
+                            </td>
+                            <td><span> <span id="calculatorIncomeYear5"></span> грн</span></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
     </div>
 
 </body>
@@ -188,123 +278,6 @@
 <script src="js/calculator.js"></script>
 
 <script>
-    let currentChartData = [0, 0, 0, 0, 0, 0];
-
-    var ctx = document.getElementById("payback-chart").getContext("2d");
-    var gradient = ctx.createLinearGradient(1000, 0, 0, 0);
-    gradient.addColorStop(0, 'rgba(0, 113, 223, 0.6)');
-    gradient.addColorStop(1, 'rgba(0, 113, 223, 0)');
-    const chartLabels = $('#payback-chart').data('labels');
-    const chartValues = $('#payback-chart').data('values');
-    const chartData = {
-        labels: chartLabels,
-        datasets: [{
-            backgroundColor: gradient,
-            fill: true,
-            borderColor: 'rgb(0, 113, 223)',
-            datalabels: {
-                color: '#545459',
-                anchor: function (context) {
-                    let anc = 'left';
-                    switch (context.dataIndex) {
-                        case 1:
-                            anc = 'start';
-                            break;
-                        case 2:
-                            anc = 'start';
-                            break;
-                        case 3:
-                            anc = 'start';
-                            break;
-                        case 4:
-                            anc = 'end';
-                            break;
-                        case 5:
-                            anc = 'end';
-                            break;
-                        default:
-                            anc = 'end';
-                            break;
-                    }
-                    return anc;
-                },
-                align: function (context) {
-                    let pos = 'left';
-                    switch (context.dataIndex) {
-                        case 1:
-                            pos = 'right';
-                            break;
-                        case 2:
-                            pos = 'right';
-                            break;
-                        case 3:
-                            pos = 'right';
-                            break;
-                        case 4:
-                            pos = 'left';
-                            break;
-                        case 5:
-                            pos = 'left';
-                            break;
-                        default:
-                            pos = 'left';
-                            break;
-                    }
-                    return pos;
-                },
-                offset: 8,
-                display: function (context) {
-                    return context.dataIndex != 0;
-                },
-                font: function (context) {
-                    var width = context.chart.width;
-                    var size = Math.round(width / 32);
-                    return {
-                        size: (size <= 14) ? size : 14
-                    };
-                }
-            },
-            data: [0, 1, 2, 3, 4, 5],
-        }]
-    };
-    const chartConfig = {
-        type: 'line',
-        data: chartData,
-        options: {
-            maintainAspectRatio: false,
-            scales: {
-                x: {
-                    grace: '6%',
-                    grid: {
-                        display: false
-                    }
-                },
-                y: {
-                    grid: {
-                        display: false
-                    }
-                }
-            },
-            plugins: {
-                legend: {
-                    display: false
-                },
-                tooltip: {
-                    enabled: false
-                }
-            }
-        },
-        plugins: [ChartDataLabels]
-    };
-    const paybackChart = new Chart(
-        ctx,
-        chartConfig
-    );
-
-
-
-
-
 
 
 </script>

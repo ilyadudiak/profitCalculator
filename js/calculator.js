@@ -23,23 +23,39 @@ let calculatorInputData = {
 
 select.on('change', () => {
 
-    calculatorData.forEach(el => {
+    // calculatorData.forEach(el => {
 
-        resetInputWorkDays();
-        if (select.val() == el.name) {
-            calculatorCurrentData = el;
-            calculatorInputData = {
-                workDays: 1,
-                procedurePerDay: calculatorCurrentData.pocedureMin,
-                procedurePrice: calculatorCurrentData.priceMin,
-                suppliesPrice: calculatorCurrentData.suppliesPrice
-            };
-            createStats(calculatorInputData);
-            $('.calculator-top-left__img').css({ 'background': `center / contain no-repeat url(../img/${el.img})` });
-            calculatorUpdate();
-        }
-    })
+    //     resetInputWorkDays();
+    //     console.log(select.val(), el.name);
+    //     if (select.val() == el.name) {
+    //         console.log('win');
+    //         calculatorCurrentData = el;
+    //         calculatorInputData = {
+    //             workDays: 1,
+    //             procedurePerDay: calculatorCurrentData.pocedureMin,
+    //             procedurePrice: calculatorCurrentData.priceMin,
+    //             suppliesPrice: calculatorCurrentData.suppliesPrice
+    //         };
 
+    //         createStats(calculatorInputData);
+    //         $('.calculator-top-left__img').css({ 'background': `center / contain no-repeat url(img/${el.img})` });
+    //         calculatorUpdate();
+    //         return;
+    //     }
+    // })
+    let thisElement = calculatorData.find((element) => element.name === select.val());
+    calculatorCurrentData = thisElement;
+    calculatorInputData = {
+        workDays: 1,
+        procedurePerDay: calculatorCurrentData.pocedureMin,
+        procedurePrice: calculatorCurrentData.priceMin,
+        suppliesPrice: calculatorCurrentData.suppliesPrice
+    };
+    console.log(thisElement, select.val());
+    createStats(calculatorInputData);
+    $('.calculator-top-left__img').css({ 'background': `center / contain no-repeat url(img/${thisElement.img})` });
+    console.log(thisElement, select.val());
+    calculatorUpdate();
 })
 
 createSelect();
@@ -52,6 +68,7 @@ function resetInputWorkDays() {
 $('#calculatorInputWorkDays').on('input', (event) => {
     $('#calculatorWorkDays').text(event.target.value);
     calculatorInputData.workDays = event.target.value;
+
     createStats(calculatorInputData);
 
 })
@@ -63,6 +80,7 @@ function createInputProcedurePerDay(max) {
     $('#calculatorInputProcedurePerDay').on('input', (event) => {
         calculatorInputData.procedurePerDay = event.target.value;
         $('#calculatorProcedurePerDay').text(event.target.value);
+
         createStats(calculatorInputData);
 
     })
@@ -82,6 +100,7 @@ function createInputProcedurePrice(min, max) {
 
         $('#calculatorProcedurePrice').text(event.target.value);
         calculatorInputData.procedurePrice = event.target.value;
+
         createStats(calculatorInputData);
 
     })
@@ -104,126 +123,150 @@ function calculatorUpdate() {
     createInputProcedurePrice(calculatorCurrentData.priceMin, calculatorCurrentData.priceMax);
 }
 
+var ctx = document.getElementById("payback-chart").getContext("2d");
+var gradient = ctx.createLinearGradient(1000, 0, 0, 0);
+gradient.addColorStop(0, 'rgba(0, 113, 223, 0.6)');
+gradient.addColorStop(1, 'rgba(0, 113, 223, 0)');
+const chartLabels = $('#payback-chart').data('labels');
+const chartValues = $('#payback-chart').data('values');
+let chartData = {
+    labels: chartLabels,
+    datasets: [{
+        backgroundColor: gradient,
+        fill: true,
+        borderColor: 'rgb(0, 113, 223)',
+        datalabels: {
+            color: '#545459',
+            anchor: function (context) {
+                let anc = 'left';
+                switch (context.dataIndex) {
+                    case 1:
+                        anc = 'start';
+                        break;
+                    case 2:
+                        anc = 'start';
+                        break;
+                    case 3:
+                        anc = 'start';
+                        break;
+                    case 4:
+                        anc = 'end';
+                        break;
+                    case 5:
+                        anc = 'end';
+                        break;
+                    default:
+                        anc = 'end';
+                        break;
+                }
+                return anc;
+            },
+            align: function (context) {
+                let pos = 'left';
+                switch (context.dataIndex) {
+                    case 1:
+                        pos = 'right';
+                        break;
+                    case 2:
+                        pos = 'right';
+                        break;
+                    case 3:
+                        pos = 'right';
+                        break;
+                    case 4:
+                        pos = 'left';
+                        break;
+                    case 5:
+                        pos = 'left';
+                        break;
+                    default:
+                        pos = 'left';
+                        break;
+                }
+                return pos;
+            },
+            offset: 8,
+            display: function (context) {
+                return context.dataIndex != 0;
+            },
+            font: function (context) {
+                var width = context.chart.width;
+                var size = Math.round(width / 32);
+                return {
+                    size: (size <= 14) ? size : 14
+                };
+            }
+        },
+        data: [0, 1, 2, 3, 4, 5],
+    }]
+};
+let chartConfig = {
+    type: 'line',
+    data: chartData,
+    options: {
+        maintainAspectRatio: false,
+        scales: {
+            x: {
+                grace: '6%',
+                grid: {
+                    display: false
+                }
+            },
+            y: {
+                grid: {
+                    display: false
+                }
+            }
+        },
+        plugins: {
+            legend: {
+                display: false
+            },
+            tooltip: {
+                enabled: false
+            }
+        }
+    },
+    plugins: [ChartDataLabels]
+};
+const paybackChart = new Chart(
+    ctx,
+    chartConfig
+);
+function roundNumber(num) {
+    if (Number.isInteger(num)) {
+        return num;
+    } else {
+        return num.toFixed(2);
+    }
+}
+function updateChart(newData) {
 
+    paybackChart.data.datasets[0].data = newData;
+    console.log(paybackChart.data.datasets[0]);
+    paybackChart.update();
+}
 function createStats({ workDays, procedurePrice, procedurePerDay, suppliesPrice }) {
-    console.log(suppliesPrice);
-    console.log($('#calculatorCurrentData'));
-    $('#calculatorEmployeeBonus').text((workDays * procedurePrice * procedurePerDay) / 4);
-    $('#calculatorSupplies').text(suppliesPrice * workDays * procedurePerDay);
+    let incomeDay = (procedurePrice * procedurePerDay) - (suppliesPrice * procedurePerDay) - ((procedurePrice * procedurePerDay) / 4);
+    let incomeYear = (incomeDay * workDays) * 12;
+
+    $('#calculatorEmployeeBonus').text(roundNumber((workDays * procedurePrice * procedurePerDay) / 4));
+
+
+
+    $('#calculatorSupplies').text(roundNumber(suppliesPrice * workDays * procedurePerDay));
+
+    $('#calculatorIncomeDay').text(roundNumber(incomeDay));
+    $('#calculatorIncomeMonth').text(roundNumber(incomeDay * workDays));
+    $('#calculatorIncomeYear').text(roundNumber(incomeYear));
+    $('#calculatorIncomeYear1').text(roundNumber(incomeYear));
+    $('#calculatorIncomeYear2').text(roundNumber(incomeYear * 2));
+    $('#calculatorIncomeYear3').text(roundNumber(incomeYear * 3));
+    $('#calculatorIncomeYear4').text(roundNumber(incomeYear * 4));
+    $('#calculatorIncomeYear5').text(roundNumber(incomeYear * 5));
+    updateChart([0, roundNumber(incomeYear), roundNumber(incomeYear * 2), roundNumber(incomeYear * 3), roundNumber(incomeYear * 4), roundNumber(incomeYear * 5)]);
 }
 
 createStats(calculatorInputData);
 
 
-
-// let currentChartData = [0, 2076, 2076 * 2, 2076 * 3, 2076 * 4, 2076 * 5];
-// var ctx = document.getElementById("payback-chart").getContext("2d");
-// var gradient = ctx.createLinearGradient(1000, 0, 0, 0);
-// gradient.addColorStop(0, 'rgba(0, 113, 223, 0.6)');
-// gradient.addColorStop(1, 'rgba(0, 113, 223, 0)');
-// const chartLabels = $('#payback-chart').data('labels');
-// const chartValues = $('#payback-chart').data('values');
-// const chartData = {
-//     labels: chartLabels,
-//     datasets: [{
-//         backgroundColor: gradient,
-//         fill: true,
-//         borderColor: 'rgb(0, 113, 223)',
-//         datalabels: {
-//             color: '#545459',
-//             anchor: function (context) {
-//                 let anc = 'left';
-//                 switch (context.dataIndex) {
-//                     case 1:
-//                         anc = 'start';
-//                         break;
-//                     case 2:
-//                         anc = 'start';
-//                         break;
-//                     case 3:
-//                         anc = 'start';
-//                         break;
-//                     case 4:
-//                         anc = 'end';
-//                         break;
-//                     case 5:
-//                         anc = 'end';
-//                         break;
-//                     default:
-//                         anc = 'end';
-//                         break;
-//                 }
-//                 return anc;
-//             },
-//             align: function (context) {
-//                 let pos = 'left';
-//                 switch (context.dataIndex) {
-//                     case 1:
-//                         pos = 'right';
-//                         break;
-//                     case 2:
-//                         pos = 'right';
-//                         break;
-//                     case 3:
-//                         pos = 'right';
-//                         break;
-//                     case 4:
-//                         pos = 'left';
-//                         break;
-//                     case 5:
-//                         pos = 'left';
-//                         break;
-//                     default:
-//                         pos = 'left';
-//                         break;
-//                 }
-//                 return pos;
-//             },
-//             offset: 8,
-//             display: function (context) {
-//                 return context.dataIndex != 0;
-//             },
-//             font: function (context) {
-//                 var width = context.chart.width;
-//                 var size = Math.round(width / 32);
-//                 return {
-//                     size: (size <= 14) ? size : 14
-//                 };
-//             }
-//         },
-//         data: currentChartData,
-//     }]
-// };
-// const chartConfig = {
-//     type: 'line',
-//     data: chartData,
-//     options: {
-//         maintainAspectRatio: false,
-//         scales: {
-//             x: {
-//                 grace: '6%',
-//                 grid: {
-//                     display: false
-//                 }
-//             },
-//             y: {
-//                 grid: {
-//                     display: false
-//                 }
-//             }
-//         },
-//         plugins: {
-//             legend: {
-//                 display: false
-//             },
-//             tooltip: {
-//                 enabled: false
-//             }
-//         }
-//     },
-
-// };
-// const paybackChart = new Chart(
-//     ctx,
-//     chartConfig
-// );
